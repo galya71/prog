@@ -1,0 +1,44 @@
+#include"iostream"
+#include "cstdlib"
+#include"ctime"
+#include "fstream"
+using namespace std;
+int main()
+{
+	setlocale(LC_ALL, "russian");
+	srand(time(0));
+	int k;
+	int n = 10;
+	int* a = new int[n];
+	string path = "C:\\мое\\лаба1\\file.txt";
+	ifstream file;
+	file.open(path);
+	for (int i = 0; i < n; i++)
+	{
+		file >> a[i]; //считываем из файла и записываем в массив 
+	}
+	if (!file.is_open())
+	{
+		cout << "Ошибка открытия файла\n";
+	}
+	else
+	{
+		cout << "Файл открыт\n";
+	}
+	file.close();
+
+	//упорядочить по возрастанию
+	for (int i = 0; i < n - 1; i++)
+		for (int j = i + 1; j < n; j++)
+			if (a[j] < a[i])
+			{
+				int tmp = a[j];
+				a[j] = a[i];
+				a[i] = tmp;
+			}
+	for (int i = 0; i < n; i++)
+		cout << " " << (a[i] < 0 ? a[i] : ' ');
+	cout << endl;
+	delete[]a;
+	return 0;
+}
