@@ -7,8 +7,8 @@ int main()
 {
 	setlocale(LC_ALL, "russian");
 	srand(time(0));
-	int k;
-	int n = 10;
+	int k, n;
+	cout << "n:"; cin >> n;
 	int* a = new int[n];
 	string path = "C:\\мое\\лаба1\\file.txt";
 	ifstream file;
