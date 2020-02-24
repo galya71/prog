@@ -1,0 +1,32 @@
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+int main()
+{
+	srand(time(NULL));
+	int N, k, A, B;
+	cout << "A:"; cin >> A;
+	cout << "B:"; cin >> B;
+	cout << "N:"; cin >> N;
+	int* a = new int[N];
+	for (int i = 0; i < N; i++)
+		a[i] = A + rand() % ((B + 1) - A);
+
+	cout << "k="; cin >> k;
+	int* b = new int[N * 2]; // создаем новый массив удвоенного размера
+	int bcnt = 0;            // инициализируем счетчик элементов нового массива
+	for (int i = 0; i < N; i++)
+	{
+		if (a[i] % 2 == 1) // проверяем значение на нечетность
+		{
+			b[bcnt++] = k;  // если нечетное, то помещаем в новый массив число Х          
+		}
+		b[bcnt++] = a[i]; // помещаем в новый массив значение из первоначального
+	}
+
+	for (int i = 0; i < bcnt; i++)
+		cout << b[i] << " ";
+	cout << endl;
+	return 0;
+}
