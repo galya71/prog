@@ -1,0 +1,73 @@
+#include"iostream"
+#include "cstdlib"
+#include"ctime"
+#include "fstream"
+using namespace std;
+void check(int& n)//количество чисел в файле
+{
+	int value;
+	string path = "C:\\мое\\лаба1\\file.txt";
+	ifstream F;
+	F.open(path);//открываем файл для чтения
+	if (F.is_open())
+	{
+		F >> value;
+		while (!F.eof())//проверяем, достигнут ли конец файла
+		{
+			F >> value;//считываем значение из файла просто чтобы !F.eof() работала правильно
+			n++;
+ 		}
+		cout << "Количество чисел в файле:" << n << endl;
+	}
+	F.close();
+}
+
+int main()
+{
+	setlocale(LC_ALL, "russian");
+	int n = 1;
+	check(n);
+	int* a = new int[n];
+	string path = "C:\\мое\\лаба1\\file.txt";
+	ifstream F;
+	F.open(path);
+	for (int i = 0; i < n; i++)
+	{
+		F >> a[i]; //считываем из файла и записываем в массив 
+	}
+	if (!F.is_open())
+	{
+		cout << "Ошибка открытия файла\n";
+	}
+	else
+	{
+		cout << "Файл открыт\n";
+	}
+	F.close();
+
+	//упорядочить по возрастанию
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (int j = 0; j < n - i - 1; j++)
+		{
+			if (a[j] > a[j + 1]) {
+				// меняем элементы местами
+				int temp = a[j];
+				a[j] = a[j + 1];
+				a[j + 1] = temp;
+			}
+		}
+	}
+	cout << "Массив из отрицательных чисел:  ";
+	for (int i = 0; i < n; i++)
+	{
+		if (a[i] < 0) 
+		{
+			cout << a[i] << " ";
+		}
+	}
+	cout << endl;
+	delete[]a;
+
+	return 0;
+}
