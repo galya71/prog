@@ -1,0 +1,134 @@
+#include <ctime>
+#include <iostream>
+#include <string>
+#include <fstream>
+#include "stdio.h"
+#include <iomanip>
+
+using namespace std;
+
+//Функция транспонирования матрицы
+int** TranspMatrix(int** Matrix, int& n, int& m)
+{
+	int** tMatrix = new int* [n];
+	for (int i = 0; i < n; i++)
+	{
+		tMatrix[i] = new int[m];
+	}
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < n; j++)
+			tMatrix[i][j] = Matrix[j][i];
+	int temp = n;
+	n = m;
+	m = temp;
+
+	return tMatrix;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+	int n, m;
+	int** A, ** C;//Матрицы
+	int** trC;
+	cout << "Количество строк:";
+	cin >> n;
+	cout << "Количество столбцов:";
+	cin >> m;
+
+//векторы
+	int* B = new int[m];
+	int* D = new int[m];
+	A = new int* [n];
+	C = new int* [n];
+	trC = new int* [n];
+	
+	for (int i = 0; i < n; i++)
+	{
+		A[i] = new int[m];
+		C[i] = new int[m];
+		trC[i] = new int[m];
+	}
+
+	ifstream file("C:\\мое\\учеба моа195\\языки\\lab_2\\A.txt");//Чтение файла
+	if (!file)
+	{
+		cout << "Ошибка чтения файла fileA";
+	}
+
+
+	cout << "Матрица А:" << endl;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			file >> A[i][j];
+			cout << setw(4) << A[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << "Матрица С:" << endl;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			file >> C[i][j];
+			cout << setw(4) << C[i][j] << " ";
+		}
+		cout << endl;
+	}
+	
+	cout << "Транспонированная матрица С:" << endl;
+
+	trC = TranspMatrix(C, n, m);
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			cout << setw(4) << trC[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << " 20 умножить на транспонированную матрицу С(20 * С^T): " << endl;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			trC[i][j] = 20 * trC[i][j];
+			cout << setw(4) << trC[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << "Вектор В:" << endl;
+	for (int i = 0; i < m; i++) {
+		file >> B[i];
+		cout << B[i] << endl;
+	}
+	cout << endl;
+	cout << "Вектор D:" << endl;
+	for (int i = 0; i < m; i++) {
+		file >> D[i];
+		cout << D[i] << endl;
+	}
+	cout << endl;
+
+	cout << " A(n,m) * B(m): " << endl;
+	int* sumAB = new int[n];
+	for (int i = 0; i < n; i++) {
+		sumAB[i] = 0;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			sumAB[i] += A[i][j] * B[j];
+		}
+		cout << setw(4) << sumAB[i] << endl;
+	}
+	
+
+
+
+}
+
