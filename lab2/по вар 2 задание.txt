@@ -1,0 +1,104 @@
+#include <iostream>
+using namespace std;
+#include <iomanip>
+#include <time.h>
+#include <vector>
+
+//Функция выделения памяти для матрицы
+int** InitMatrix(int n, int m)
+{
+	int** Matrix = new int* [n];
+	for (int i = 0; i < n; i++)
+		Matrix[i] = new int[m];
+	return Matrix;
+}
+
+//Функция освобождения памяти для матрицы
+void DeleteMatrix(int** Matrix, int n, int m)
+{
+	for (int i = 0; i < n; i++)
+		delete[] Matrix[i];
+	delete[] Matrix;
+}
+
+//Функция транспонирования матрицы
+int** TranspMatrix(int** Matrix, int& n, int& m)
+{
+	int** tMatrix = InitMatrix(m, n);
+
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < n; j++)
+			tMatrix[i][j] = Matrix[j][i];
+	int temp = n;
+	n = m;
+	m = temp;
+
+	return tMatrix;
+}
+
+//Функция вывода матрицы на экран
+void PrintMatrix(int** Matrix, int n, int m)
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+			cout << setw(4) << Matrix[i][j] << " ";
+		cout << endl;
+	}
+}
+
+//Основная функция программы
+void main(void)
+{
+	setlocale(LC_ALL, "Russian"); //Установим локаль в .1251
+	srand(time(NULL)); //Инициализация генератора случайно величины
+	int n, m; //размерность матрицы
+	int** MatrixA; //Наша матрица
+	int** MatrixC;
+	cout << "Введите кол-во строк в матрицы n = ";
+	cin >> n; //Введем n
+	cout << "Введите кол-во столбцов матрицы m = ";
+	cin >> m; //Введем m
+	MatrixA = InitMatrix(n, m); //Выделим память для матрицы
+	MatrixC = InitMatrix(n, m); //Выделим память для матрицы
+	//Заполним матрицу случайными величинами
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			MatrixA[i][j] = rand() % 100;
+			MatrixC[i][j] = rand() % 100;
+		}
+	vector<int> vB(m);
+	vector<int> vD(m);
+	// Заполняем вектор B
+	for (int i = 0; i < vB.size(); ++i) {
+		vB[i] = rand() % 100;
+	}
+
+	// Заполняем вектор D
+	for (int i = 0; i < vD.size(); ++i) {
+		vD[i] = rand() % 100;
+	}
+	cout << "Вектор B:" << endl;
+
+	// Выводим вектор B
+	for (int i = 0; i < vB.size(); ++i) {
+		cout << setw(4) << vB[i] << endl;
+	}
+
+	cout << "Вектор D:" << endl;
+	// Выводим вектор D
+	for (int i = 0; i < vD.size(); ++i) {
+		cout << setw(4) << vD[i] << endl;
+	}
+	cout << endl;
+	cout << "Получена Матрица A:" << endl;
+	PrintMatrix(MatrixA, n, m); //Выведим на экран матрицу
+	cout << "Полученная Матрица С:" << endl;
+	PrintMatrix(MatrixC, n, m); //Выведим на экран матрицу
+	MatrixC = TranspMatrix(MatrixC, n, m); //Транспонирование матрицы
+
+	cout << endl << "Транспонированная матрица C:" << endl;
+	PrintMatrix(MatrixC, n, m);
+	
+}
