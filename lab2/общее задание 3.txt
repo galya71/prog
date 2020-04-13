@@ -1,0 +1,111 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+void menu();
+void results(int** n, int* n1, int a, int b);
+void winners(int* n, int a);
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	int n, m, key = 1;
+	menu();
+	cout << "введите число: "; cin >> key;
+	srand(time(NULL));
+	do
+		switch (key)
+		{
+		case 1:
+			n = rand() % 45;
+			m = rand() % 11;
+			break;
+		case 2:
+			cout << "введите кол-во стрелков - "; cin >> n;
+			cout << "\nвведите кол-во выстрелов - "; cin >> m;
+			break;
+		case 0:
+			cout << "BB\n";
+			break;
+		default:
+			cout << "Ошибка!\n";
+			break;
+		}
+	while (n == 0 || m == 0 || n == 1 || m == 1);
+	cout << "Кол-во стрелков: " << n << "\nКол-во выстрелов: " << m << endl;
+	int** a;
+	a = new int* [n];
+
+	for (int i = 0; i < n; i++)
+	{
+		a[i] = new int[m];
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			a[i][j] = rand() % 11;
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			printf("%5d", a[i][j]);
+		}
+		cout << endl;
+	}
+
+	int* res;
+	res = new int[n];
+	results(a, res, n, m);
+	winners(res, n);
+	return 0;
+}
+
+void menu()
+{
+
+	cout << "1 - рандомное заполнение\n";
+	cout << "2 - ручное заполнение\n";
+	cout << "0 - выход\n";
+}
+
+void results(int** n, int* n1, int a, int b)
+{
+	int s;
+	for (int i = 0; i < a; i++)
+	{
+		s = 0;
+		for (int j = 0; j < b; j++)
+			s += n[i][j];
+		n1[i] = s;
+	}
+	cout << "\nРезультаты:\n";
+	for (int i = 0, j = 1; i < a; i++, j++)
+	{
+		cout << "Стрелок № " << j << " имеет результат - " << n1[i] << endl;
+	}
+}
+
+void winners(int* n, int a)
+{
+	int max, maxI;
+	max = n[0];
+	for (int i = 0; i < a; i++)
+	{
+		if (n[i] > max)
+			max = n[i];
+	}
+	cout << endl << "Наилучший результат: " << max << "\nПобедитель - ";
+	for (int i = 0; i < a; i++)
+	{
+		if (n[i] == max)
+		{
+			cout << "Стрелок № " << i + 1 << endl;
+		}
+	}
+}
