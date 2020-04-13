@@ -1,0 +1,136 @@
+#include <iostream>
+#include <ctime>
+
+using namespace std;
+
+void show_map(int map[3][3])
+{
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			cout << map[j][i];
+		}
+		cout << endl;
+	}
+}
+
+bool GameProcess(int map[3][3])//проверка игрока
+{
+	int c = 0;//счетчик строк
+	int d = 0;//счетчик столбцов
+	int b = 0;//счетчик главной диагонали
+	int a = 0;//счетчик второй диагонали
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (map[j][i] == 1)
+				d++;
+			if (map[i][j] == 1)
+				c++;
+			if (map[j][j] == 1)
+				b++;
+			if (map[2 - j][j] == 1)
+				a++;
+		}
+
+		if (c == 3 || d == 3 || b == 3 || a == 3)
+		{
+			return true;
+			break;
+		}
+
+		c = 0;
+		d = 0;
+		b = 0;
+		a = 0;
+	}
+	return false;
+}
+
+bool GameProcess1(int map[3][3])//проверка компьютера
+{
+	int c = 0;//счетчик строк
+	int d = 0;//счетчик столбцов
+	int b = 0;//счетчик главной диагонали
+	int a = 0;//счетчик второй диагонали
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (map[j][i] == 2)
+				d++;
+			if (map[i][j] == 2)
+				c++;
+			if (map[j][j] == 2)
+				b++;
+			if (map[2 - j][j] == 2)
+				a++;
+		}
+
+		if (c == 3 || d == 3 || b == 3 || a == 3)
+		{
+			return true;
+			break;
+		}
+
+		c = 0;
+		d = 0;
+		b = 0;
+		a = 0;
+	}
+	return false;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	int map[3][3] = { 0 };
+	int x = 0, y = 0;
+	srand(time(NULL));
+
+	while (true)
+	{
+		cout << "Введите координату (номер столбца, начинается с 0; номер строки , начинается с 0), где вы хотите поставить крестик:\n";
+		cin >> x;
+		cout << endl;
+		cin >> y;
+		cout << endl;
+		while (map[x][y] == 1 || map[x][y] == 2)
+		{
+			cout << "\nКлетка уже занята, введите другие координаты.\n";
+			cin >> x;
+			cout << endl;
+			cin >> y;
+		}
+		map[x][y] = 1;
+
+		cout << endl;
+		show_map(map);
+		if (GameProcess(map) == true)
+		{
+			cout << "\nВы победили!\n";
+			break;
+		}
+
+		cout << "Ход компьютера - \n";
+		do
+		{
+			x = rand() % 3;
+			y = rand() % 3;
+		} while (map[x][y] != 0);
+
+		map[x][y] = 2;
+		cout << endl;
+		show_map(map);
+		if (GameProcess1(map) == true)
+		{
+			cout << "\nКомпьютер победил!\n";
+			break;
+		}
+	}
+	return 0;
+}
