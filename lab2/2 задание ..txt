@@ -15,8 +15,8 @@ int** TranspMatrix(int** Matrix, int& n, int& m)
 	{
 		tMatrix[i] = new int[m];
 	}
-	for (int i = 0; i < m; i++)
-		for (int j = 0; j < n; j++)
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
 			tMatrix[i][j] = Matrix[j][i];
 	int temp = n;
 	n = m;
@@ -36,13 +36,14 @@ int main()
 	cout << "Количество столбцов:";
 	cin >> m;
 
-//векторы
-	int* B = new int[m];
+	//векторы
+	int* B = new int[m]; //векторы
 	int* D = new int[m];
+
 	A = new int* [n];
 	C = new int* [n];
 	trC = new int* [n];
-	
+
 	for (int i = 0; i < n; i++)
 	{
 		A[i] = new int[m];
@@ -68,22 +69,22 @@ int main()
 		cout << endl;
 	}
 	cout << "Матрица С:" << endl;
-	for (int i = 0; i < m; i++)
+	for (int i = 0; i < n; i++)
 	{
-		for (int j = 0; j < n; j++)
+		for (int j = 0; j < m; j++)
 		{
 			file >> C[i][j];
 			cout << setw(4) << C[i][j] << " ";
 		}
 		cout << endl;
 	}
-	
+
 	cout << "Транспонированная матрица С:" << endl;
 
-	trC = TranspMatrix(C, n, m);
-	for (int i = 0; i < m; i++)
+	trC = TranspMatrix(C, m, n);
+	for (int i = 0; i < n; i++)
 	{
-		for (int j = 0; j < n; j++)
+		for (int j = 0; j < m; j++)
 		{
 			cout << setw(4) << trC[i][j] << " ";
 		}
@@ -126,7 +127,7 @@ int main()
 		}
 		cout << setw(4) << sumAB[i] << endl;
 	}
-	
+
 	cout << " C^T(m,n) * D(m): " << endl;
 	int* sumCD = new int[n];
 	for (int i = 0; i < n; i++) {
@@ -145,7 +146,7 @@ int main()
 	for (int i = 0; i < n; i++) {
 		sumABCD[i] = sumAB[i] - sumCD[i];
 		cout << sumABCD[i] << endl;
-		}
-		cout << endl;
-		return 0;
+	}
+	cout << endl;
+	return 0;
 }
