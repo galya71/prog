@@ -1,0 +1,30 @@
+#include<iostream>
+#include <stdio.h>
+using namespace std;
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	// s1 - исходна€ (входна€) строка, а s2 - целева€ строка
+	char s1[] = "Programming", s2[100], i;
+
+	// выводим строку s1
+	cout << "строка1: " << s1 << endl;
+
+	// ¬ыполнить цикл, пока не будет найден ноль
+
+	for (i = 0; s1[i] != '\0'; ++i) {
+
+		// копируем символы
+
+		// символ в str2 из str1
+
+		s2[i] = s1[i];
+
+	}
+
+
+	// печать строки назначени€
+	cout << "строка2: " << s1;
+	
+	return 0;
+}
