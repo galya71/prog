@@ -1,30 +1,26 @@
-#include<iostream>
-#include <stdio.h>
-using namespace std;
-int main()
+#include <iostream>
+
+void copy_n(const char* src, char* dest, size_t count)
 {
-	setlocale(LC_ALL, "rus");
-	// s1 - исходная (входная) строка, а s2 - целевая строка
-	char s1[] = "Programming", s2[100], i;
-
-	// выводим строку s1
-	cout << "строка1: " << s1 << endl;
-
-	// Выполнить цикл, пока не будет найден ноль
-
-	for (i = 0; s1[i] != '\0'; ++i) {
-
-		// копируем символы
-
-		// символ в str2 из str1
-
-		s2[i] = s1[i];
-
+	while (count != 0 && *src)   
+	{
+		// копируем символ
+		*dest = *src;
+		// переходим к следующему символу
+		++dest;
+		++src;
+		// уменьшаем счетчик символов
+		--count;
 	}
 
 
-	// печать строки назначения
-	cout << "строка2: " << s1;
-	
-	return 0;
+	*dest = '\0';
 }
+int main()
+{
+	char result[15];
+	copy_n("qwertyuio zxcvf", result, 12);
+	std::cout << result;
+}
+
+
