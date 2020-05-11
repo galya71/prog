@@ -1,8 +1,9 @@
 #include <iostream>
 
+
 void copy_n(const char* src, char* dest, size_t count)
 {
-	while (count != 0 && *src)   
+	while (count != 0 && *src)
 	{
 		// копируем символ
 		*dest = *src;
@@ -18,8 +19,8 @@ void copy_n(const char* src, char* dest, size_t count)
 }
 int main()
 {
-	char result[15];
-	copy_n("qwertyuio zxcvf", result, 12);
+	char result[50];
+	copy_n("Do you like programming?", result, 11);
 	std::cout << result;
 }
 
