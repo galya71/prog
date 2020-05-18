@@ -1,44 +1,85 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 
-using namespace std;
+
+void Parting(char* str, int lenght);//разделение на слова
+void Searching_For_Longest_Word(char* mass, char* NeededWord, int lenght); //поиск длинного слова
 
 int main()
 {
-    string text[100]; 
-    string words[100]; 
-    int line = 0; 
-    string s; 
+	setlocale(LC_ALL, "rus");
+	char* mass = new char[200]; //содержит каждый символ файла
+	char* NeededWord = new char[50]; //“ам мы разместим слово, которое мы ищем
 
-	ifstream f("text.txt");
-    while(getline(f,s)){ // пока есть очередна€ строка сохран€ем ее в переменную s
-        text[line] = s;
-        line++; 
-    }
-	f.close(); 
-    string lastline = text[line-1]; // в переменную lastline помещаем последнюю считанную строку
+	std::ifstream F("C:\\Users\\√ал€\\Desktop\\учеба ¬”«\\€зыки\\lab_3\\text.txt", std::ios::in);
+	if (!F.is_open()) {
+		std::cout << " ажетс€, есть проблема с открытием вашего файла." << std::endl;
+		return 1;
+	}
 
-	// теперь нужно разделить эту строку на слова
-    int j=0; 
-    for(int i=0; i<lastline.length(); i++){ 
-        if(lastline[i]!=' ') 
-            words[j] += lastline[i]; 
-        else 
-            j++; 
-    }
-    
-    string word; 
-    int maxl = 0; 
-    
-    for(int i=0; i<j; i++){ // проходим по всем словам в массиве words
-        if(words[i].length() > maxl){ // если длина очередного слова больше, чем наибольша€ длина
-            maxl = words[i].length(); // перезаписываем наибольшую длину
-            word = words[i]; 
-        }
-    }
-    // после просмотра всех слов самое длинное останетс€ в переменной word
-    cout << word; // выводим
+	int i = 0;
 
-    return 0;
+	char charc;
+
+	while (F.get(charc))
+	{
+		mass[i] = charc;
+		i++;
+	}
+	mass[i] = '\0';
+	F.close();
+
+	int length = 84;
+	Parting(mass, length);
+	Searching_For_Longest_Word(mass, NeededWord, length);
+
+
+	delete[] mass;
+	delete[] NeededWord;
+	return 0;
+}
+
+
+void Searching_For_Longest_Word(char* mass, char* word, int length)
+{
+	int max = 0, k = 0;
+	int calculations = 0;
+	for (int i = 40; i < length; i++)
+	{
+		if (mass[i] == '\t') calculations = 0;
+		if (mass[i] != '\t')
+		{
+			calculations++;
+			if (max < calculations)
+			{
+				max = calculations;
+				k = i;
+			}
+		}
+
+	}
+
+	int v = 0;
+	k++;
+	for (int i = k - max; i <= k; i++)
+	{
+		word[v] = mass[i];
+		v++;
+	}
+	word[v] = '\0';
+
+	std::cout << "—амое длинное слово: " << word << "\n";
+	std::cout << "ƒлина" << max << "\n" << "\n";
+}
+
+void Parting(char* str, int length)
+{
+	for (int i = 0; i < length; i++)
+	{
+		if (str[i] == ' ' || str[i] == '?' || str[i] == '!' || str[i] == '.')
+		{
+			str[i] = '\t';
+		}
+
+	}
 }
