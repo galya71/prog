@@ -19,9 +19,18 @@ void copy_n(const char* src, char* dest, size_t count)
 }
 int main()
 {
+	setlocale(LC_ALL, "rus");
 	char result[50];
-	copy_n("Do you like programming?", result, 11);
-	std::cout << result;
+	char str[50];
+	gets_s(str);
+	int n;
+	std::cout << "Введите количество n символов, которое нужно скопировать: "; std::cin >> n;
+	if (n == 0) std::cout << "Вы ввели 0 символов\n";
+	if (n > 0)
+	{
+		copy_n(str, result, n);
+		std::cout << result;
+	}
 }
 
 
