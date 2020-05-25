@@ -1,0 +1,111 @@
+#include <iostream>
+#include <fstream>
+
+
+void Parting(char* str, int lenght);//Функция для разделения слов
+void Searching_For_Longest_Word(char* mass, char* NeededWord, int length, int* tempt, int* temps); //Название говорит за себя
+
+int main()
+{
+	char* mass = new char[85]; //Сюда будут записаны все символы из файла
+	char* NeededWord = new char[67]; //Сюда мы поместим искомое наибольшее слово
+	int* tempt = new int[15];
+	int* temps = new int[15];
+
+	std::ifstream F("C:\\Users\\Галя\\Desktop\\учеба ВУЗ\\языки\\lab_3\\text.txt", std::ios::in); //ios::in явно указывает на то, что файл открывается для чтения.
+	if (!F.is_open()) {
+		std::cout << "It seems there's a problem with opening your file." << std::endl;
+		return 1;
+	}
+
+	int i = 0;
+
+	//переносим элементы из файла в массив, где будем дальше работать с символами
+	char charc;
+	while (F.get(charc))
+	{
+		mass[i] = charc;
+		i++;
+	}
+	mass[i] = '\0';
+	F.close();
+
+	int length = 84; //мануально указано количество символов в файле, по-хорошему бы это автоматизировать
+	Parting(mass, length);
+	Searching_For_Longest_Word(mass, NeededWord, length, tempt, temps);
+
+	//Просто очищаем память в конце программы
+	delete[] tempt;
+	delete[] temps;
+	delete[] mass;
+	delete[] NeededWord;
+	return 0;
+}
+
+void Parting(char* str, int length)
+{
+	for (int i = 0; i < length; i++)
+	{
+		//если встречается один из приведенных ниже символов, мы отделим два символа промеж него табуляцией, тем самым разделив слова
+		if (str[i] == ' ' || str[i] == '?' || str[i] == '!' || str[i] == '.')
+		{
+			str[i] = '\t';
+		}
+
+	}
+}
+
+void Searching_For_Longest_Word(char* mass, char* NeededWord, int length, int* tempt, int* temps)
+{
+	int min = 0, k = 0, s = 0;
+	int calculations = 0;
+	for (int i = 0; i < length; i++)
+	{
+		if (mass[i] == '\t') {
+			temps[s] = calculations;
+			calculations = 0;
+			tempt[s] = i;
+			s++;
+		}
+		if (mass[i] != '\t' && mass[i] != '\n')
+		{
+			calculations++;
+			/*if (min < calculations)
+			{
+				min = calculations;
+				k = i;
+			}*/
+		}
+
+	}
+	int temp, temp1;
+	for (int i = 1; i < 15; i++) {
+		if (temps[i] < temps[i - 1]) {
+			temp = temps[i];
+			temp1 = tempt[i];
+			temps[i] = temps[i - 1];
+			tempt[i] = tempt[i - 1];
+			temps[i - 1] = temp;
+			tempt[i - 1] = temp1;
+			i = 0;
+		}
+	}
+	for (int i = 0; i < 15; i++) {
+		for (int x = 0; x < 67; x) {
+			int v = 0;
+			for (int j = 0; j < temps[i]; j++) {
+				NeededWord[x + j] = mass[tempt[i] + j - temps[i]];
+				v++;
+			}
+			for (int d = 0; d < v; d++) {
+				std::cout << NeededWord[x + d];
+			}
+			std::cout << " ";
+			x = x + v;
+			if (i == 14)break;
+			i++;
+		}
+	}
+	NeededWord[66] = '\0';
+	std::cout << "\n";
+}
