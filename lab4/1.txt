@@ -13,6 +13,6 @@ int main()
 	int A, B;
 	std::cin >> A; std::cin >> B;
 	int arr[6] = { 2,3,5,6,7,9 };
-	std::cout << count(arr, 3, A, B);
+	std::cout << count(arr, 6, A, B);
 	return 0;
 }

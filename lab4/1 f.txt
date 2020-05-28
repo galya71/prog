@@ -1,0 +1,29 @@
+#include <iostream>
+#include <ctime>
+using namespace std;
+int count(int* x, int i, int A, int B)
+{
+	if (i < 0)
+		return 0;
+	int n = 0;
+	if (x[i] >= A && x[i] <= B)
+		n = 1;// если входит в интервал, то засчитываем
+	return n + count(x, i-1, A, B);// суммируем засчитанные элементы
+}
+int main()
+{
+	srand(time(0));
+	setlocale(LC_ALL, "rus");
+	int A, B, n;
+	cout << "Отрезок: от "; cin >> A; cout << "до "; cin >> B; cout << endl;
+	cout << "Размерность массива: "; cin >> n;
+	int* arr = new int[n];
+	for (int i = 0; i < n; i++)
+	{
+		arr[i] = -5 + rand() % 20;
+		cout << " " <<arr[i];
+	}
+	cout << endl;
+	cout << "количество элементов массива, принадлежащих заданному отрезку: " << count(arr, n-1, A, B);// вызов count начинаем с последнего элемента
+	return 0;
+}
