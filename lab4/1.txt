@@ -1,0 +1,18 @@
+#include <iostream>
+int count(int* x, int i, int A, int B)
+{
+	if (i < 0)
+		return 0;
+	int n = 0;
+	if (x[i] >= A && x[i] <= B)
+		n = 1;
+	return n + count(x, i - 1, A, B);
+}
+int main()
+{
+	int A, B;
+	std::cin >> A; std::cin >> B;
+	int arr[6] = { 2,3,5,6,7,9 };
+	std::cout << count(arr, 3, A, B);
+	return 0;
+}
