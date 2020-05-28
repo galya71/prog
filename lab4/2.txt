@@ -1,0 +1,23 @@
+#include <iostream>
+
+using namespace std;
+
+void Func(int n) {
+
+	if (n != 0)
+		Func(n / 2);
+	else return;
+
+	cout << n % 2;
+	return;
+}
+
+int main() {
+	setlocale(0, "RUS");
+	int n;
+	cout << "Введите десятичное число: ";
+	cin >> n;
+	Func(n);
+	
+	return 0;
+}
