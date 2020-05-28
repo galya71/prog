@@ -1,0 +1,30 @@
+#include <iostream>
+#include <ctime>
+
+using namespace std;
+int rek(int F[], int G[], int i)
+{
+	if (i == 11) return 0;
+	F[i] = F[i - 1] - 3*G[i - 1];
+	G[i] = F[i - 1] + 2*G[i - 1];
+	printf("F[%d] = %d\t\t G[%d] = %d\n", i, F[i], i, G[i]);
+	i++;
+
+	return rek(F, G, i);
+
+}
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	int F[11], G[11], i;
+	F[1] = i = 1;
+	G[1] = i = -1;
+	i = 1;
+	printf("F[%d] = %d\t\t G[%d] = %d\n", i, F[i], i, G[i]);
+	i = 2;
+	rek(F, G, i);
+
+	return 0;
+}
