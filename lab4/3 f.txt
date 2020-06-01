@@ -2,8 +2,8 @@
 #include <iomanip>
 using namespace std;
 
-long F(int n);
-long G(int n);
+int F(int n);
+int G(int n);
 
 int main()
 {
@@ -14,12 +14,12 @@ int main()
 	return 0;
 }
 
-long F(int n) {
+int F(int n) {
 	if (n >= 2) return F(n - 1) - 3*G(n - 1);
 	else return 1;
 }
 
-long G(int n) {
+int G(int n) {
 	if (n >= 2) return F(n - 1) +2* G(n - 1);
 	else return -1;
 }
