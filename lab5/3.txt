@@ -1,0 +1,82 @@
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+
+using namespace std;
+
+struct smth {
+	float k = 0;
+	string nazv = " ";
+	float srokg = 0;
+	int stoimost = 0;
+};
+
+int cmpByNazv(const smth& r1, const smth& r2)
+{
+	return r1.nazv < r2.nazv;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	string x;
+	smth s;
+	ifstream file;
+
+	file.open("C:\\Users\\Галя\\Desktop\\учеба ВУЗ\\языки\\lab_5\\5.txt");
+	int len(0);
+
+
+	if (file.is_open()) {
+		while (!file.eof()) {
+			string s;
+			getline(file, s);
+			len++;
+		}
+	}
+
+	smth* arr = new smth[len];
+	file.seekg(0, ios_base::beg);
+
+	for (size_t i = 0; i < len; i++)
+	{
+		getline(file, x);
+		istringstream iss(x);
+		iss >> s.k >> s.nazv >> s.srokg >> s.stoimost;
+		arr[i] = s;
+	}
+
+	cout << "Информация о всех видах цветов : \n" << endl;
+	for (size_t n = 0; n < len; n++)
+	{
+		cout << "Количество имеющихся цветов : " << arr[n].k << " "
+			<< "Название цветов : " << arr[n].nazv << " "
+			<< "Срок годности : " << arr[n].srokg << " "
+			<< "Стоимость одного цветка : " << arr[n].stoimost << endl;
+	}
+	cout << "\nИнформация о количстве роз на складе :\n" << endl;
+	for (size_t n = 0; n < len; n++)
+	{
+		if (arr[n].nazv == "Roza")
+		{
+			cout << "Количество роз : " << arr[n].k << endl;
+		}
+	}
+	cout << "\nИнформация о цветах, цена букета, которого не должна превышать 1000, если букет из 7 цветов:\n" << endl;
+	sort(arr, arr + len, cmpByNazv);
+	for (size_t n = 0; n < len; n++)
+	{
+		if (arr[n].stoimost *7 <= 1000)
+		{
+			cout << "Количество имеющихся цветов : " << arr[n].k << " "
+				<< "Название цветов : " << arr[n].nazv << " "
+				<< "Срок годности : " << arr[n].srokg << " "
+				<< "Стоимость одного цветка : " << arr[n].stoimost << endl;
+		}
+	}
+
+
+	file.close();
+}
