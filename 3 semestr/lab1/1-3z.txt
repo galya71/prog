@@ -1,0 +1,154 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+struct datetime
+{
+
+    int year,
+        month,
+        day,
+        hour,
+        minute,
+        second;
+
+   
+    void Show()
+    {
+        cout << endl << "Дата: " << day << "." << month << "." << year << "  Время: " << hour << ":" << minute << ":" << second << endl;
+    } //Метод вывода на экран
+
+
+    //Метод, переводящий дату объекта на следующий день
+    void Sled_date()
+    {
+        day++;  //Добавляем день
+        //проверяем случаи с високосными годами, концами месяцев и конца года
+        if (day > 28)
+        {
+            if ((day == 29) && (month == 2) && (year % 4 != 0))
+            {
+                day = 1;
+                month++;
+            }
+            else if ((day == 30) && (month == 2))
+            {
+                day = 1;
+                month++;
+            }
+            else if (day == 31)
+            {
+                if ((month != 3) || (month != 5) || (month != 7) || (month != 8) || (month != 10) || (month != 12))
+                {
+                    day = 1;
+                    month++;
+                }
+            }
+            else if (day > 31)
+            {
+                day = 1;
+                month++;
+                if (month > 12)
+                {
+                    month = 1;
+                    year++;
+                }
+            }
+        }
+    }
+
+    //Метод, возвращающий дату объекта на день назад
+    void Pred_date()
+    {
+        day--; //Отнимаем один день
+       
+        if (day == 0)
+        {
+            if ((month == 3) && (year % 4 != 0))
+            {
+                day = 28;
+                month--;
+            }
+            else if ((month == 3) && (year % 4 == 0))
+            {
+                day = 29;
+                month--;
+            }
+            else if ((month - 1 == 3) || (month - 1 == 5) || (month - 1 == 7) || (month - 1 == 8) || (month - 1 == 10) || (month - 1 == 0))
+            {
+                day = 31;
+                month--;
+                if (month == 0)
+                {
+                    month = 12;
+                    year--;
+                }
+            }
+            else
+            {
+                day = 30;
+                month--;
+            }
+        }
+    }
+
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "ru");
+  
+    ifstream file("C:\\prog\\file.txt");  //Открываем файл
+
+ 
+    if (!file.is_open())   //Если файл не открылся
+        cout << "Файл не был отрыт!" << endl;
+
+    //Подсчёт дат в файле
+
+    datetime temp;  //Вспомогательнй объект дата-время
+    int n = 0;      //Количество записей в файле
+
+    
+    while (!file.eof())//Пока файл не кончится
+    {
+        //Считываем строки и подсчитываем их количество (одна строка = одна дата)
+        file >> temp.day >> temp.month >> temp.year >> temp.hour >> temp.minute >> temp.second;
+        n++;
+    }
+
+    file.close(); //Закрываем файл
+
+    //Считываем записи из файла в массив
+
+    //Создаём днамически массив по найденному количеству записей в файле
+    datetime* data;
+    data = new datetime[n];
+
+    file.open("C:\\prog\\file.txt"); //Снова открываем файл
+
+    int i = 0;
+    while (!file.eof())  //Пока файл не закончится
+    {
+        //Считываем каждую дату в отдельный элемент массива, где каждый элемент является объектов дата-время
+        file >> data[i].day >> data[i].month >> data[i].year >> data[i].hour >> data[i].minute >> data[i].second;
+        i++;
+    }
+
+    
+  
+    for (int i = 0; i < n; i++)
+    {
+        cout << endl << i + 1 << "  Дата из файла: " << data[i].day << "." << data[i].month << "." << data[i].year;//Вывод дат
+        data[i].Sled_date();
+        cout << "  Следующая дата: " << data[i].day << "." << data[i].month << "." << data[i].year;
+        data[i].Pred_date();
+        data[i].Pred_date();
+        cout << "  Предыдущая дата: " << data[i].day << "." << data[i].month << "." << data[i].year;
+        data[i].Sled_date();
+        cout << endl;
+    }
+    return 0;
+}
