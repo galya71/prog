@@ -140,8 +140,9 @@ int main()
 	//Варианта 14
 	cout << "                                 Вариант 14" << endl;
 
-	int year1;  //год до следующего дня
-	int year2; //год следующего дня
+	int year1; 
+	int year2; 
+	int prevyear;
 
 	for (int i = 0; i < n; i++)
 	{
@@ -149,9 +150,11 @@ int main()
 		date[i].Sled_date();
 		year2 = date[i].year;
 		date[i].Pred_date();
+		date[i].Pred_date();
+		prevyear = date[i].year;
 
 		//Если разность годов равна нулю, значит следующий день не пришёл на новый год. Выводим эту дату.
-		if (year1 - year2 == 0)
+		if ((year2 - year1 == 0) && (year1 - prevyear == 0))
 		{
 			cout << endl;
 			cout << i + 1 << "  Дата из файла: " << date[i].day << "." << date[i].month << "." << date[i].year;
