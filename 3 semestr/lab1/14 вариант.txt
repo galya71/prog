@@ -100,10 +100,10 @@ int main()
 {
 	setlocale(LC_ALL, "ru");
 
-	ifstream file("input.txt");  //Открываем файл
+	ifstream file("input.txt");
 
 
-	if (!file.is_open())   //Если файл не открылся
+	if (!file.is_open())
 		cout << "Файл не был отрыт!" << endl;
 
 	//Подсчёт дат в файле
@@ -112,16 +112,15 @@ int main()
 	int n = 0;      //Количество записей в файле
 
 
-	while (!file.eof())//Пока файл не кончится
+	while (!file.eof())
 	{
-		//Считываем строки и подсчитываем их количество (одна строка = одна дата)
+		//Считываем строки и подсчитываем их количество 
 		file >> temp.day >> temp.month >> temp.year >> temp.hour >> temp.minute >> temp.second;
 		n++;
 	}
 
 	file.close(); //Закрываем файл
 
-	//Считываем записи из файла в массив
 
 	//Создаём днамически массив по найденному количеству записей в файле
 	datetime* date;
@@ -130,18 +129,17 @@ int main()
 	file.open("input.txt"); //Снова открываем файл
 
 	int i = 0;
-	while (!file.eof())  //Пока файл не закончится
+	while (!file.eof())
 	{
-		//Считываем каждую дату в отдельный элемент массива, где каждый элемент является объектов дата-время
+		//Считываем каждую дату в отдельный элемент массива
 		file >> date[i].day >> date[i].month >> date[i].year >> date[i].hour >> date[i].minute >> date[i].second;
 		i++;
 	}
 
-	//Варианта 14
 	cout << "                                 Вариант 14" << endl;
 
-	int year1; 
-	int year2; 
+	int year1;
+	int year2;
 	int prevyear;
 
 	for (int i = 0; i < n; i++)
@@ -152,6 +150,8 @@ int main()
 		date[i].Pred_date();
 		date[i].Pred_date();
 		prevyear = date[i].year;
+		date[i].Sled_date();
+		
 
 		//Если разность годов равна нулю, значит следующий день не пришёл на новый год. Выводим эту дату.
 		if ((year2 - year1 == 0) && (year1 - prevyear == 0))
