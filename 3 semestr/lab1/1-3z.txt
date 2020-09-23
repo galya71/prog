@@ -17,13 +17,13 @@ struct datetime
 	void Show()
 	{
 		cout << endl << "Дата: " << day << "." << month << "." << year << "  Время: " << hour << ":" << minute << ":" << second << endl;
-	} //Метод вывода на экран
+	} //вывод на экран
 
 
 	//Метод, переводящий дату объекта на следующий день
 	void Sled_date()
 	{
-		day++;  //Добавляем день
+		day++;
 		//проверяем случаи с високосными годами, концами месяцев и конца года
 		if (day > 28)
 		{
@@ -39,10 +39,25 @@ struct datetime
 			}
 			else if (day == 31)
 			{
-				if ((month != 3) || (month != 5) || (month != 7) || (month != 8) || (month != 10) || (month != 12))
+
+				if ((month != 3) && (month != 5) && (month != 7) && (month != 8) && (month != 10) && (month != 12))
+
 				{
+
 					day = 1;
+
 					month++;
+
+					if (month > 12)
+
+					{
+
+						month = 1;
+
+						year++;
+
+					}
+
 				}
 			}
 			else if (day > 31)
@@ -61,7 +76,7 @@ struct datetime
 	//Метод, возвращающий дату объекта на день назад
 	void Pred_date()
 	{
-		day--; //Отнимаем один день
+		day--;
 
 		if (day == 0)
 		{
@@ -100,39 +115,39 @@ int main()
 {
 	setlocale(LC_ALL, "ru");
 
-	ifstream file("input.txt");  //Открываем файл
+	ifstream file("input.txt");
 
 
-	if (!file.is_open())   //Если файл не открылся
+	if (!file.is_open())
 		cout << "Файл не был отрыт!" << endl;
 
 	//Подсчёт дат в файле
 
 	datetime temp;  //Вспомогательнй объект дата-время
-	int n = 0;      //Количество записей в файле
+	int n = 0;
 
 
-	while (!file.eof())//Пока файл не кончится
+	while (!file.eof())
 	{
-		//Считываем строки и подсчитываем их количество (одна строка = одна дата)
+		//Считываем строки и подсчитываем их количество, строка-дата
 		file >> temp.day >> temp.month >> temp.year >> temp.hour >> temp.minute >> temp.second;
 		n++;
 	}
 
-	file.close(); //Закрываем файл
+	file.close();
 
-	//Считываем записи из файла в массив
+
 
 	//Создаём днамически массив по найденному количеству записей в файле
 	datetime* data;
 	data = new datetime[n];
 
-	file.open("input.txt"); //Снова открываем файл
+	file.open("input.txt");
 
 	int i = 0;
-	while (!file.eof())  //Пока файл не закончится
+	while (!file.eof())
 	{
-		//Считываем каждую дату в отдельный элемент массива, где каждый элемент является объектов дата-время
+		//Считываем каждую дату в отдельный элемент массива
 		file >> data[i].day >> data[i].month >> data[i].year >> data[i].hour >> data[i].minute >> data[i].second;
 		i++;
 	}
