@@ -1,0 +1,323 @@
+#include <iostream>
+#include <windows.h>
+#include <math.h>
+
+
+
+using namespace std;
+
+// this - это обращение к этому элементу этого объекта класса
+
+
+class Complex_number	// Создаем класс Complex_number
+{
+private:	// Модификатор доступа private (можно не писать, по умолчанию всегда private)
+	int a, b;
+	double Module;
+	int* result = new int[2];	// Массив, где 0 элемент - результат для вещественной части, 1 элемент - результат для мнимой части	комплексного числа			
+
+	friend void Scan(Complex_number& scan, char ch);		// Дружественная функция ввода комплексного числа
+	friend void Print(Complex_number& print, char ch);		// Дружественная функция вывода комплексного числа
+	friend void ModuleVect(Complex_number& valAB);			// Дружественная функция нахождения длины вектора (модуля комплексного числа)
+	friend void PrModVect(Complex_number& valAB, char ch);	// Дружественная функция вывода длины вектора (модуля модуля комплексного числа)
+
+	friend istream& operator >> (istream& in, Complex_number& other); // Вводим комплексное число
+	friend ostream& operator << (ostream& ut, Complex_number& other); // Вывод комплексного числа
+public:		// Модификатор доступа public
+	Complex_number()								// Конструктор по умолчанию
+	{
+
+	}
+	Complex_number(int a)							// Конструктор с параметрами
+	{
+		this->a = a;
+	}
+	Complex_number(int a, int b)					// Конструктор с параметрами
+	{
+		this->a = a;
+		this->b = b;
+	}
+	Complex_number(const Complex_number& other)		// Конструктор копирования
+	{
+		a = other.a;
+		b = other.b;
+		result[0] = other.result[0];
+		result[1] = other.result[1];
+	}
+
+
+
+
+	void Set_a(int value_a)		// Сеттер a
+	{
+		a = value_a;
+	}
+	void Set_b(int value_b)		// Сеттер b
+	{
+		b = value_b;
+	}
+	int Get_a()					// Геттер a 
+	{
+		return a;
+	}
+	int Get_b()					// Геттер b
+	{
+		return b;
+	}
+
+	void ModuleVect()	// Дружественная функция нахождения длины вектора (модуля комплексного числа)
+	{
+		Module = sqrt(a * a + b * b);
+	}
+
+
+	// Далее идут перегрузки (переопределения)
+	bool operator == (const Complex_number& other)	// Перегрузка оператора ==
+	{
+		if (Module == other.Module)
+		{
+			cout << "Числа равны" << endl;
+			return true;
+		}
+		else return false;
+	}
+	bool operator != (const Complex_number& other)	// Перегрузка оператора !=
+	{
+		if (Module != other.Module)
+		{
+			cout << "Числа не равны" << endl;
+			return true;
+		}
+		else  return false;
+	}
+	bool operator < (const Complex_number& other)	// Перегрузка оператора <
+	{
+		if (Module < other.Module)
+		{
+			cout << "Число A < числа B" << endl;
+			return true;
+		}
+		else return false;
+	}
+	bool operator > (const Complex_number& other)	// Перегрузка оператора >
+	{
+		if (Module > other.Module)
+		{
+			cout << "Число A > числа B" << endl;
+			return true;
+		}
+		else return false;
+	}
+
+	void operator = (const Complex_number& other)	// Перегрузка оператора =
+	{
+		a = other.a;
+		b = other.b;
+	}
+	int operator + (const Complex_number& other)	// Перегрузка оператора +
+	{
+		result[0] = a + other.a;
+
+		return result[0];
+	}
+	int* operator * (const Complex_number& other)	// Перегрузка оператора  *
+	{
+		result[0] = a * other.a + b * other.b * (-1);	// Результат для вещественной части
+		result[1] = a * other.b + b * other.a;			// Результат для мнимой части
+
+		return result;
+	}
+	int operator - (const Complex_number& other)	// Перегрузка оператора -
+	{
+		result[0] = a - other.a;
+
+		return result[0];
+	}
+
+
+
+
+	~Complex_number()							// Деструктор (Вызывается всегда в конце програмы в момент её завершения)
+	{
+
+	}
+};
+
+
+istream& operator >> (istream& in, Complex_number& other)	// Вводим комплексное число
+{
+	cout << "Действительная часть:\t"; cin >> other.a;
+	cout << "Мнимая часть:\t\t"; cin >> other.b;
+
+	return in;
+}
+ostream& operator << (ostream& ut, Complex_number& other)	// Выводим комплексного числа
+{
+	if (other.b > 0) cout << other.a << " + " << other.b << "*i" << endl;
+	else if (other.b == 0) cout << other.a << endl;
+	else cout << other.a << " " << other.b << "*i" << endl;
+
+	return ut;
+}
+// Передаём параметрами объект класса и символ ch, который отвечает за название объекта класса
+void Print(Complex_number& print, char ch)	// Дружественная функция вывода комплексного числа
+{
+	if (print.b > 0) cout << "Вывод числа " << ch << ":\t\t\t" << print.a << " + " << print.b << "*i" << endl;
+	else if (print.b == 0) cout << "Вывод числа " << ch << ":\t\t\t" << print.a << endl;
+	else cout << "Вывод числа " << ch << ":\t\t\t" << print.a << print.b << "*i" << endl;
+}
+void PrintRes1(int res)				// Вывод результата операций + * - = вещественной части комплексного числа
+{
+	cout << "Результат:\t\t\t" << res;
+}
+void PrintRes2(int res)				// Вывод результата операций + - = мнимой части комплексного числа
+{
+	if (res > 0) cout << " + " << res << "*i" << endl;
+	else if (res == 0) cout << endl;
+	else cout << res << "*i" << endl;
+}
+void PrintResM_i(int* res)			// Вывод результата операции * мнимой части комплексного числа
+{
+	if (res[1] > 0) cout << "Результат:\t\t\t" << res[0] << " + " << res[1] << "*i" << endl;
+	else if (res[1] == 0) cout << "Результат:\t\t\t" << res[0] << endl;
+	else cout << "Результат:\t\t\t" << res[0] << res[1] << "*i" << endl;
+
+}
+void PrintOpResults(Complex_number& valA, Complex_number& valB, char& _A, char& _B)	// Вывод операций + * - =
+{
+	int* result1 = new int[2];					// Результат операций + * - =
+	char _C = _A;	// Запоминаем название комплексного числа A
+
+	// Ниже идут операции + * - = комплексных чисел
+	result1[0] = valA.operator+(valB);
+	cout << _A << " + " << _B << endl;
+	PrintRes1(result1[0]);
+	result1[1] = valA.Get_b() + valB.Get_b();
+	PrintRes2(result1[1]);
+
+	cout << endl;
+
+	result1 = valA.operator*(valB);
+	cout << _A << " * " << _B << endl;
+	/*result2 = (valA.Get_b() * valB.Get_b()) * (-1) + result1;*/
+	PrintResM_i(result1);
+
+	cout << endl;
+
+	result1[0] = valA.operator-(valB);
+	cout << _A << " - " << _B << endl;
+	PrintRes1(result1[0]);
+	result1[1] = valA.Get_b() - valB.Get_b();
+	PrintRes2(result1[1]);
+
+	cout << endl;
+
+	valA.operator=(valB);
+	cout << _A << " = " << _B << endl;
+	Print(valA, _A);
+	// Вот до этого момента идут операции + * - = комплексных чисел
+
+	// Меняем местами имена комплексных чисел
+	_A = _B;
+	_B = _C;
+}
+
+void PrModVect(Complex_number& valAB, char ch)	// Дружественная функция вывода длины вектора (модуля комплексного числа)
+{
+	cout << "Модуль числа " << ch << ":\t\t" << valAB.Module << endl;
+}
+
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	Complex_number A;				// Объявляем объект A класса Complex_number || Здесь вызывается конструктор по умолчанию A
+	Complex_number B;				// Объявляем объект B класса Complex_number || Здесь вызывается конструктор по умолчанию B
+	char ChA = 'A'; char ChB = 'B';
+
+	// Вводим и выводим комплексные числа
+	cout << "Ввод действительной и мнимой частей числа A:" << endl; cin >> A;
+	cout << "Вывод числа A:\t" << A << endl;
+	cout << "Ввод действительной и мнимой частей числа B:" << endl; cin >> B;
+	cout << "Вывод числа A:\t" << B << endl;
+
+	// Запоминаем действительные и мнимые части комплексных чисел
+	int saveA_a = A.Get_a();		// Запоминаем число A_a
+	int saveA_b = A.Get_b();		// Запоминаем число A_b
+	int saveB_a = B.Get_a();		// Запоминаем число B_a
+	int saveB_b = B.Get_b();		// Запоминаем число B_b
+
+	cout << endl << "######################" << endl << endl;
+	PrintOpResults(A, B, ChA, ChB); // Вывод операций + * - =
+	cout << endl << "######################" << endl << endl; A.Set_a(saveA_a); A.Set_b(saveA_b); // Вызываем метод(функцию класса) сеттер, в который передаём значение, которое запоминали
+	PrintOpResults(B, A, ChA, ChB); // Вывод операций + * - =
+	cout << endl << "######################" << endl << endl; B.Set_a(saveB_a); B.Set_b(saveB_b); // Вызываем метод(функцию класса) сеттер, в который передаём значение, которое запоминали
+
+	bool bl; cout << "Очистить? "; cin >> bl;
+	if (bl) system("CLS"); // Здесь либо очищаем консоль - вводим 1, либо не очищаем - вводим 0.
+
+
+	Complex_number Par_A(1, 6);	// Объявляем объект Par_A класса Complex_number || Здесь вызывается конструктор с параметрами (потому что передаём параметры)
+	Complex_number Par_B(4, 3);	// Объявляем объект Par_B класса Complex_number || Здесь вызывается конструктор с параметрами (потому что передаём параметры)
+
+	// Запоминаем действительные и мнимые части комплексных чисел
+	saveA_a = Par_A.Get_a();		// Запоминаем число A_a
+	saveA_b = Par_A.Get_b();		// Запоминаем число A_b
+	saveB_a = Par_B.Get_a();		// Запоминаем число B_a
+	saveB_b = Par_B.Get_b();		// Запоминаем число B_b
+	ChA = 'A'; ChB = 'B';
+
+	// Выводим комплексные числа
+	cout << "Комплексное число A:\t" << Par_A;
+	cout << endl;
+	cout << "Комплексное число B:\t" << Par_B;
+
+	cout << endl << "######################" << endl << endl;
+	PrintOpResults(Par_A, Par_B, ChA, ChB); // Вывод операций + * - =
+	cout << endl << "######################" << endl << endl; Par_A.Set_a(saveA_a); Par_A.Set_b(saveA_b); // Вызываем метод(функцию класса) сеттер, в который передаём значение, которое запоминали
+	PrintOpResults(Par_B, Par_A, ChA, ChB); // Вывод операций + * - =
+	cout << endl << "######################" << endl << endl; Par_B.Set_a(saveB_a); Par_B.Set_b(saveB_b); // Вызываем метод(функцию класса) сеттер, в который передаём значение, которое запоминали
+
+	cout << "Очистить? "; cin >> bl;
+	if (bl) system("CLS"); // Здесь либо очищаем консоль - вводим 1, либо не очищаем - вводим 0.
+
+
+	Complex_number Cop_A(B);	// Объявляем объект Cop_A класса Complex_number || Здесь вызывается конструктор копирования (потому что передаём параметром другой объект класса, собственно, копируем)
+	ChA = 'A'; ChB = 'B';
+	cout << "Комплексное число A, в которое скопировали B:\t" << Cop_A;
+
+	cout << endl << "######################" << endl << endl;
+	PrintOpResults(Cop_A, B, ChA, ChB); // Вывод операций + * - =
+	cout << endl << "######################" << endl << endl;
+	PrintOpResults(B, Cop_A, ChA, ChB); // Вывод операций + * - =
+	cout << endl << "######################" << endl << endl;
+
+	cout << "Очистить? "; cin >> bl;
+	if (bl) system("CLS"); // Здесь либо очищаем консоль - вводим 1, либо не очищаем - вводим 0.
+
+
+	ChA = 'A'; ChB = 'B';
+	cout << "Числа для сравнения: " << endl;
+
+	// Выводим комплексные числа
+	cout << "Комплексное число A:\t" << A << endl;
+	cout << "Комплексное число B:\t" << B << endl;
+
+	// Находим их модуль
+	A.ModuleVect(); B.ModuleVect();
+	cout << endl;
+	PrModVect(A, ChA); PrModVect(B, ChB);
+
+	// Далее сравниваем комплексные числа по модулю
+	cout << endl;
+	A.operator==(B);
+	A.operator!=(B);
+	A.operator<(B);
+	A.operator>(B);
+
+
+
+	cout << endl;
+	return 0;
+}
