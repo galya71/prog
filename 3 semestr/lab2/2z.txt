@@ -1,0 +1,257 @@
+#include <iostream>
+#include <math.h>
+#include <valarray>	// Эта библиотека поможет нам найти arccos
+#define PI 3.14159265	// Это макрос, чтобы постоянно не писать в программе значение числа PI, 
+// мы его определяем в самом начале и вместо значения мы в программе пишем просто PI, т.е. компилятор будет видеть вместо PI 3.14159265
+
+using namespace std;
+
+class vect
+{
+private:
+	int n; double Module;
+	int size;
+	int* res;		// Вектор, хранящий результат операций векторов v1 и v2
+	int* v;			// Вектор
+
+	friend void scan(vect& A);								// Дружественная функция ввода координат
+	friend istream& operator >>(istream& in, vect& other);	// Дружественная функция || Перегрузка >>
+	friend ostream& operator <<(ostream& ut, vect& other);	// Дружественная функция || Перегрузка <<
+	friend void ResV(const vect& R);						// Дружественная функция вывода результата операций над векторами v1 и v2
+
+public:
+	vect()								// Конструктор по умолчанию
+	{
+		cout << "Вызвался конструктор по умолчанию\t\t" << this << endl;
+	}
+	vect(int x, int y)					// Конструктор с параметрами
+	{
+		cout << "Вызвался конструктор с параметрами\t\t" << this << endl;
+
+
+	}
+	vect(const vect& other)				// Конструктор копирования
+	{
+		cout << "Вызвался конструктор копирования\t\t" << this << endl;
+
+		for (int i = 0; i < size; i++)
+		{
+			res[i] = other.res[i];		// Копируем результаты A в Cop_A
+		}
+	}
+
+	double ModuleVect()					// Вычисление длины вектора
+	{
+		for (int i = 0; i < size; i++)
+		{
+			Module = Module + v[i] * v[i];
+		}
+
+		return sqrt(Module);
+	}
+
+
+	int* operator + (const vect& other)	// перегрузка (переопределение) +. Тут мы складываем векторы
+	{
+		cout << "Вызвался оператор +\t\t\t\t" << this << endl;
+
+
+		if (size != other.size)
+		{
+			cout << "!! Векторы сложить невозможно: размерности не совпадают." << endl;
+			cout << "!! Программа завершается.." << endl;
+			exit(0);
+		}
+
+		res = new int[size];
+		for (int i = 0; i < size; i++)
+		{
+			res[i] = v[i] + other.v[i];
+		}
+
+		return res;
+	}
+	int* operator * (int n)	// перегрузка *. Тут мы умножаем векторы на число
+	{
+		cout << "Вызвался оператор *\t\t\t\t" << this << endl;
+
+		for (int i = 0; i < size; i++)
+		{
+			res[i] = v[i] * n;
+		}
+
+		return res;
+	}
+	int operator * (const vect& other)	// перегрузка *. Тут происходит скалярное произведение векторов
+	{
+		cout << "Вызвался оператор *\t\t\t\t" << this << endl;
+
+		int rs = 0;
+		for (int i = 0; i < size; i++)
+		{
+			res[i] = v[i] * other.v[i];
+			rs = rs + res[i];
+		}
+
+		return rs;
+	}
+
+
+	bool operator == (const vect& other)	// Перегрузка ==
+	{
+		if (Module == other.Module)
+		{
+			cout << "Числа равны" << endl;
+			return true;
+		}
+		else return false;
+	}
+	bool operator != (const vect& other)	// Перегрузка !=
+	{
+		if (Module != other.Module)
+		{
+			cout << "Числа не равны" << endl;
+			return true;
+		}
+		else  return false;
+	}
+	bool operator < (const vect& other)	// Перегрузка <
+	{
+		if (Module < other.Module)
+		{
+			cout << "Число A < числа B" << endl;
+			return true;
+		}
+		else return false;
+	}
+	bool operator > (const vect& other)	// Перегрузка >
+	{
+		if (Module > other.Module)
+		{
+			cout << "Число A > числа B" << endl;
+			return true;
+		}
+		else return false;
+	}
+
+
+	~vect()										// Деструктор(очищаем память)
+	{
+		cout << "Вызвался деструктор\t\t\t\t" << this << endl;
+		delete[] v;
+		delete[] res;
+	}
+};
+
+
+// Это перегрузка вывода (cout'а)
+ostream& operator <<(ostream& ut, vect& R) // Дружественная функция вывода вектора || Перегрузка <<
+{
+	ut << "{ ";
+	for (int i = 0; i < R.size; i++)
+	{
+		if (i == R.size - 1)
+		{
+			ut << R.v[i];
+			break;
+		}
+		ut << R.v[i] << ", ";
+	}
+	ut << " }" << endl << endl;
+
+	return ut;
+}
+
+// Это перегрузка ввода (cin'а)
+istream& operator >>(istream& in, vect& other) // Дружественная функция ввода вектора || Перегрузка >>
+{
+	cout << "Количество элементов вектора:\t"; in >> other.size;
+
+	other.v = new int[other.size];
+	for (int i = 0; i < other.size; i++)
+	{
+		other.v[i] = rand() % 10;
+	}
+
+	return in;
+}
+
+void ResV(const vect& R)	// Дружественная функция вывода результата операций над векторами v1 и v2
+{
+	cout << "Результат:\t\t\t";
+
+	cout << "{ ";
+	for (int i = 0; i < R.size; i++)
+	{
+		if (i == R.size - 1)
+		{
+			cout << R.res[i];
+			break;
+		}
+		cout << R.res[i] << ", ";
+	}
+	cout << " }" << endl << endl;
+
+}
+void Skal(int res)							// Вывод скалярного произведения векторов
+{
+	cout << "Скалярное произведение:\t\t" << res << endl;
+}
+
+double cornAB(int skal, double modA, double modB)	// Угол между векторами
+{
+	double res;
+
+	res = skal / (modA * modB);
+
+	return res;
+}
+void PrCornAB(double res)						// Вывод угла между векторами
+{
+	cout << "CosA:\t\t\t\t" << res << endl;
+	cout << "A:\t\t\t\t" << acos(res) * 180 / PI << endl;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	vect A;		// Объявляем вектор A || Вызывается конструктор по умолчанию
+	vect B;		// Объявляем вектор A || Вызывается конструктор по умолчанию
+
+	cout << "Vect A: " << endl; cin >> A;
+	cout << A << endl;
+
+	cout << "Vect B: " << endl; cin >> B;
+	cout << B << endl;
+
+	A + B;			// Сложение векторов
+	ResV(A);				// Вывод результата сложения векторов
+
+	int n;
+	cout << "Введите число:\t"; cin >> n;
+	A* n;			// Умножение вектора на число
+	ResV(A);				// Вывод результата умножения вектора на число
+
+	Skal(A * B);	// Скалярное произведение векторов
+
+
+	// Вывод длины вектора || Вычисление длины вектора
+	cout << endl;
+	cout << "Длина вектора A:\t\t" << A.ModuleVect() << endl;
+	cout << "Длина вектора B:\t\t" << B.ModuleVect() << endl;
+
+	// Сравнение длины векторов
+	cout << endl;
+	A == B;
+	A != B;
+	A < B;
+	A > B;
+
+	cout << endl;
+	double t = cornAB(A * B, A.ModuleVect(), B.ModuleVect());	// Угол между векторами
+	PrCornAB(t);														// Вывод угла между векторами
+
+	cout << endl;
+	return 0;
+}
