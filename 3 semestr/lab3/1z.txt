@@ -1,0 +1,282 @@
+#include <iostream>
+#include <windows.h>
+#include <math.h>
+
+
+using namespace std;
+
+class complex
+{
+public:
+	int** v;
+private:
+	int rows; int cols = 2; // 0 столбец - действительная часть, 1 столбец - мнимая часть
+
+	friend ostream& operator << (ostream& ut, complex& other);			// Вывод комплексногых чисел
+	friend istream& operator >> (istream& in, complex& other);			// Ввод размера комплексных чисел и их инициализация
+
+public:
+	complex()
+	{
+
+	}
+	complex(int size)	// Конструктор с параметрами
+	{
+		rows = size;
+	}
+
+	void ident()						// Объявление динамического массива
+	{
+		v = new int* [rows];
+
+		for (int i = 0; i < rows; i++)
+		{
+			v[i] = new int[cols];
+		}
+	}
+
+	int getRows()
+	{
+		return rows;
+	}
+	int** getV()
+	{
+		return v;
+	}
+
+	~complex()
+	{
+		for (int i = 0; i < rows; i++)
+		{
+			delete[] v[i];
+		}
+		delete[] v;
+	}
+};
+
+template <class T>
+class vector
+{
+private:
+	T* v;
+	int rows;
+	int cols = 2;
+	double Module = 0;
+
+	friend ostream& operator << (ostream& ut, vector<int>& other);			// Вывод вектора с целыми числами
+	friend ostream& operator << (ostream& ut, vector<double>& other);		// Вывод вектора с вещественными числами
+public:
+	void ent()							// Заполнение вектора целыми/вещественными числами
+	{
+		cin >> rows;
+		v = new T[rows];
+		for (int i = 0; i < rows; i++)
+		{
+			v[i] = sqrt(rand() % 100);
+		}
+	}
+	void print()						// Вывод целых/вещественных чисел
+	{
+		cout << "Числа:" << endl;
+		for (int i = 0; i < rows; i++)
+		{
+			cout << "\t" << v[i] << endl;
+		}
+	}
+	void ModuleVect()					// Вычисление длины вектора 
+	{
+		for (int i = 0; i < rows; i++)
+		{
+			Module = Module + v[i] * v[i];
+		}
+		Module = sqrt(Module);
+	}
+	void PrintModuleVect()				// Вывод длины вектора
+	{
+		cout << "Длина вектора:\t" << Module << endl << endl;
+	}
+
+	~vector()
+	{
+		delete[] v;
+	}
+};
+
+template <>
+class vector<complex>
+{
+public:
+	complex* ve;
+	int rows;
+	int cols = 2;
+	double* Module;
+
+public:
+	vector(complex& other)	// Конструктор копирования || копирование rows
+	{
+		rows = other.getRows();	// Копируем количество комплексных чисел в вектор с этими комплексными числами
+		ve = new complex[rows]; // Объявляем динамический массив из из переменных типа данных complex (комплексные числа)
+	}
+
+	void enter(complex& other)	// Метод заполнения вектора комплексными числами
+	{
+		for (int i = 0; i < rows; i++) // У каждого элемента-объекта с типом данных complex объявляем массив, который будет хранить в себе комплексное число
+		{
+			ve[i].v = new int* [rows];
+			ve[i].v[i] = new int[cols];
+		}
+
+		for (int i = 0; i < rows; i++) // Заполняем вектор ve комплексными числами
+		{
+			ve[i].v[i][0] = other.v[i][0];
+			ve[i].v[i][1] = other.v[i][1];
+		}
+	}
+
+	void ModuleVect()					// Вычисление длины вектора 
+	{
+		Module = new double[rows];
+		for (int i = 0; i < rows; i++)
+		{
+			Module[i] = 0;
+		}
+		for (int i = 0; i < rows; i++)
+		{
+			Module[i] = Module[i] + ve[i].v[i][0] * ve[i].v[i][0] + ve[i].v[i][1] * ve[i].v[i][1];
+			Module[i] = sqrt(Module[i]);
+		}
+	}
+	void PrintModuleVect()				// Вывод длины вектора
+	{
+		cout << "Вектор: ";
+		cout << "{ ";
+		for (int i = 0; i < rows; i++)
+		{
+			cout << Module[i];
+			if (i != rows - 1) cout << ", ";
+		}
+		cout << " }" << endl;
+
+		cout << "Длина вектора:\t" << rows << endl << endl;
+	}
+
+	~vector()
+	{
+		delete[] ve;
+	}
+};
+
+
+ostream& operator << (ostream& ut, vector<int>& other)	// Вывод вектора с целыми числами
+{
+	ut << "Вектор: ";
+	ut << "{ ";
+
+	for (int i = 0; i < other.rows; i++)
+	{
+		ut << other.v[i];
+		if (i != other.rows - 1) ut << ", ";
+	}
+
+
+	ut << " }" << endl;
+
+	return ut;
+}
+ostream& operator << (ostream& ut, vector<double>& other)	// Вывод вектора с вещественными числами
+{
+	ut << "Вектор: ";
+	ut << "{ ";
+
+	for (int i = 0; i < other.rows; i++)
+	{
+		ut << other.v[i];
+		if (i != other.rows - 1) ut << ", ";
+	}
+
+
+	ut << " }" << endl;
+
+	return ut;
+}
+ostream& operator << (ostream& ut, vector<complex>& other)	// Вывод вектора с комплексными числами
+{
+	ut << "Вектор: ";
+	ut << "{ ";
+
+	for (int i = 0; i < other.rows; i++)
+	{
+		if (other.ve[i].v[i][1] > 0) ut << other.ve[i].v[i][0] << " + " << other.ve[i].v[i][1] << "*i";
+		else if (other.ve[i].v[i][1] < 0) ut << other.ve[i].v[i][0] << " - " << other.ve[i].v[i][1] << "*i";
+		else ut << other.ve[i].v[i][0];
+		if (i != other.rows - 1) ut << ", ";
+	}
+
+
+	ut << " }" << endl;
+
+	return ut;
+}
+istream& operator >> (istream& in, complex& other)	// Ввод размера комплексных чисел
+{
+	cout << "Количество комплексных чисел:\t"; in >> other.rows;	// Вводим количество комплексных чисел
+	other.ident();
+
+	for (int i = 0; i < other.rows; i++)
+	{
+		for (int j = 0; j < other.cols; j++)
+		{
+			other.v[i][j] = rand() % 20;
+		}
+	}
+
+
+
+	return in;
+}
+ostream& operator << (ostream& ut, complex& other)	// Вывод комплексных чисел
+{
+	ut << "Комплексные числа:" << endl;
+	for (int i = 0; i < other.rows; i++)
+	{
+		if (other.v[i][1] > 0) ut << "\t " << other.v[i][0] << " + " << other.v[i][1] << "*i" << endl;
+		else if (other.v[i][1] < 0) ut << "\t " << other.v[i][0] << "  " << other.v[i][1] << "*i" << endl;
+		else ut << "\t " << other.v[i][0] << endl;
+	}
+
+	return ut;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	complex Ac;
+	cin >> Ac;	// Ввод количества и инициализация комплексных чисел
+	cout << Ac;	// Вывод комплексных чисел
+
+	vector<complex> A(Ac);	// Копируем rows - количество комплексных чисел
+	A.enter(Ac);			// заполнения вектора комплексными числами
+	cout << A;				// Вывод вектора
+	A.ModuleVect();			// длина вектора
+	A.PrintModuleVect();	// вывод длины вектора
+	vector<int> B;
+	cout << "Количество целых чисел:\t";
+	B.ent();				// заполнения вектора целыми/вещественными числами
+	B.print();				// вывода целых/вещественных чисел
+	cout << B;				// вывода вектора с целыми числами
+	B.ModuleVect();			// Длина вектора с целыми/вещественными числами
+	B.PrintModuleVect();	// Вывод длины вектора с целыми/вещественными числами
+
+	vector<double> C;
+	cout << "Количество вещественных чисел:\t";
+	C.ent();				// заполнения вектора целыми/вещественными числами
+	C.print();				// вывода целых/вещественных чисел
+	cout << C;				// вывода вектора с вещественными числами
+	C.ModuleVect();			// Длина вектора с целыми/вещественными числами
+	C.PrintModuleVect();	// Вывод длины вектора с целыми/вещественными числами
+
+
+
+	return 0;
+}
