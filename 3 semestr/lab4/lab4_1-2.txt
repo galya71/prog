@@ -1,0 +1,250 @@
+#include <iostream> 
+#include <fstream>
+#include <vector>
+#include <list>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <queue> 
+#include <stack>
+#include <locale>
+
+using namespace std;
+
+void input(vector  <int>  v, vector<int>::const_iterator i); // вывод вектора
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+	int num;
+	cout << "Введите номер:" << endl;
+	cout << "1 - Задание 1.1." << endl;
+	cout << "2 - Задание 1.2." << endl;
+	cout << "3 - Задание 2." << endl;
+	cout << "0 - Выход." << endl;
+	cin >> num;
+	cout << endl;
+	system("cls");
+	while (num)
+	{
+		if (num == 1)
+		{
+			
+
+			string word, word2;
+
+			cout << "Введите слово: ";
+			cin >> word;
+			word2 = word;
+			transform(word.begin(), word.end(), word.begin(), tolower);//Перевод в нижний регистр
+
+			stack<char> stk;
+			queue<char> que;
+
+			for (char x : word)
+			{
+				que.push(x);
+				stk.push(x);
+			}
+
+			for (int i = 0; i < (int)que.size(); i++)
+			{
+				if (que.front() != stk.top())
+				{
+					cout << "Слово не является паллиндромом. \n";
+					cout << endl;
+					system("pause");
+				}
+				que.pop();
+				stk.pop();
+			}
+			for (int i = 0; i < (int)que.size(); i++)
+			{
+				if (que.front() == stk.top())
+				{
+					cout << "Слово является паллиндромом. \n";
+					cout << endl;
+					system("pause");
+				}
+				que.pop();
+				stk.pop();
+			}
+		}
+		if (num == 2)
+		{
+			stack<char> st;
+			const char* s = "{{(}h)jk}";// исходное выражение
+			cout << "Cтрока: " << s << endl;
+			bool balance = true;
+			// balance=true если баланс существует, т. Е. Для каждой открывающейся //скобки есть закрывающая. И balance=false в противном случае
+			int n = strlen(s);
+			for (int i = 0; i < n && balance; i++)
+			{
+				if (s[i] == '{')
+					st.push(s[i]); //если встретили  {  - помещаем ее в стек
+				else
+					if (s[i] == '}')       // если встретили   }
+						if (!st.empty()) // и если стек не пуст
+						{
+							st.pop();
+						}    // удаляем из стека соответствующую {
+						else
+						{
+							balance = false;
+						} // Если нет соответствующей {
+				int m = strlen(s);
+				for (int i = 0; i < m && balance; i++)
+				{
+					if (s[i] == '(')
+						st.push(s[i]); //если встретили ( - помещаем ее в стек
+					else
+						if (s[i] == ')') // если встретили )
+							if (!st.empty()) // и если стек не пуст
+							{
+								st.pop();
+							} // удаляем из стека соответствующую (
+							else
+							{
+								balance = false;
+							} // Если нет соответствующей (
+				}
+			}
+			// если balance=true и в стеке нет непарных “{“ - баланс существует, иначе нет
+			if (balance && st.empty())
+				cout << "Есть баланс";
+			else
+				cout << "Нет баланса";
+			cout << endl << endl;
+			system("pause");
+		}
+		if (num == 3)
+		{
+			int  n;
+			vector  <int>  v;
+			vector<int>::const_iterator i;
+			ifstream in("text.txt");
+			if (!in) { cerr << "Файл не найден\n"; exit(1); }
+			int x;
+			while (in >> x)
+				v.push_back(x); // записываем очередное значение в конец вектора
+
+			cout << "Размер вектора: " << v.size() << endl;
+			cout << "Содержимое вектора:\n" << endl;
+
+			input(v, i);
+
+			cout << endl << endl << "----------Задание 2.1----------" << endl;
+
+			cout << endl << "Введите искомое число: ";
+			cin >> n;
+
+			int сount_n = count(v.begin(), v.end(), n);
+
+			list<int> loc_list; // список позиций искомой величины
+			vector<int>::iterator  location = v.begin();
+			while (1)
+			{
+				// находим очередную позицию искомого значения, начиная с позиции //location
+				location = find(location, v.end(), n);
+				if (location == v.end())
+					break;
+				loc_list.push_back(location - v.begin());// помещаем в список номер элемента
+				location++; // переходим к следующей позиции
+			}
+			//вывод элементов полученного  списка
+			list<int>::iterator p = loc_list.begin(); // итератор для прохода по списку
+			if (сount_n == 0)
+			{
+				cout << endl << "Числa " << n << " в векторе нет." << endl;
+			}
+			else {
+				cout << "Число " << n << " находится на позиции(ях): ";
+
+				for (p; p != loc_list.end(); ++p)
+					cout << *p << ' ';   // вывод значений элементов списка
+
+				cout << endl << "Число " << n << " встречается в векторе " << сount_n << " раз(a)." << endl;
+			}
+
+			cout << endl << "----------Задание 2.2----------" << endl << endl;
+
+			int сount_n_e = count_if(v.begin(), v.end(), [](int x) { return (x % 2 == 0); });// количество четных элементов
+			int сount_n_une = count_if(v.begin(), v.end(), [](int x) { return (x % 2 != 0); });// количество нечетных элементов
+
+			cout << "Количество четных чисел: " << сount_n_e << endl;
+			cout << "Количество нечетных чисел: " << сount_n_une << endl;
+
+			cout << "Четное(ые) число(а) находится(ятся) на позиции(ях):";
+			//Список для хранения номеров четных элементов
+			list<int> loc_list1;
+			// список формируется аналогично предыдущему случаю, только //используется функция find_if, третий параметр – имя функции, //проверяющей четность
+			location = v.begin();
+			while (1)
+			{
+				location = find_if(location, v.end(), [](int x) { return (x % 2 == 0); });
+				if (location == v.end())
+					break;
+				loc_list1.push_back(location - v.begin());
+				location++;
+			}
+			// используем итератор, описанный для списков 
+			p = loc_list1.begin();
+			int sum = 0;
+			for (p; p != loc_list1.end(); ++p)
+			{
+				cout << *p  << ' ';   //выводим номера четных элементов       
+			}
+			if (сount_n_e > сount_n_une) {
+				for (p; p != loc_list1.end(); ++p)
+					sum += v[*p];  //находим сумму элементов вектора, номера берем из списка    
+				cout << endl << "Сумма четных элементов: " << sum << endl;
+			}
+			else
+			{
+				for (i = v.begin(); i != v.end(); ++i)
+					sum += *i;
+				cout << endl << "Сумма всех элементов: " << sum << endl;
+			}
+
+			cout << endl << "----------Задание 2.3----------" << endl << endl;
+
+			cout << "Вектор до сортировки: " << endl;
+			input(v, i);
+			cout << endl;
+
+			sort(v.begin(), v.end());
+
+			cout << "Вектор после сортировки: " << endl;
+			input(v, i);
+			cout << endl;
+
+			cout << endl << "----------Задание 2.4----------" << endl << endl;
+
+			swap(v[0], v[v.size() - 1]);
+			cout << "Вектор после перестановки: " << endl;
+			input(v, i);
+			cout << endl << endl;
+			system("pause");
+		}
+		if (num > 3 || num < 1)
+		{
+			cout << "Вы выбрали не существующую задачу. Повторите выбор." << endl;
+			system("pause");
+		}
+		system("cls");
+		cout << "Введите номер:" << endl;
+		cout << "1 - Задание 1.1." << endl;
+		cout << "2 - Задание 1.2." << endl;
+		cout << "3 - Задание 2." << endl;
+		cout << "0 - Выход." << endl;
+		cin >> num;
+		cout << endl;
+		system("cls");
+	}
+}
+
+void input(vector  <int>  v, vector<int>::const_iterator i)
+{
+	for (i = v.begin(); i != v.end(); ++i)
+		cout << *i << " ";
+}
