@@ -1,0 +1,237 @@
+#include <iostream>
+
+using namespace std;
+
+#define PI 3.14
+
+
+
+
+class Figure	// Интерфейс
+{
+private:
+	Figure* F;
+
+public:
+	Figure()
+	{
+		//cout << "Constr Figure" << endl;
+	}
+
+	virtual void Show()
+	{
+
+	}
+	virtual double CalcArea()
+	{
+		return 0;
+	}
+	virtual Figure* Copy()
+	{
+		return F;
+	}
+};
+
+class Circle : public Figure
+{
+private:
+	int* r;	// Радиус
+
+public:
+	Circle()
+	{
+		r = new int();
+		do
+		{
+			cout << "Введите радиус r:\t";
+			cin >> *r;
+		} while (*r < 0);
+	}
+	Circle(int* other_r)
+	{
+		r = new int();
+		r = other_r;
+	}
+
+	void Show() override
+	{
+		cout << "r:\t" << *r << endl;
+	}
+	double CalcArea() override
+	{
+		return PI * (*r) * (*r);
+	}
+	Figure* Copy() override
+	{
+		Figure* cir = new Circle(r);
+		return cir;
+	}
+};
+
+class Rectangle : public Figure
+{
+private:
+	int* a;
+	int* b;
+
+
+public:
+	Rectangle()
+	{
+		a = new int();
+		b = new int();
+
+		do
+		{
+			cout << "Введите сторону a:\t"; cin >> *a;
+			cout << "Введите сторону b:\t"; cin >> *b;
+		} while (*a < 0 || *b < 0);
+	}
+	Rectangle(int* other_a, int* other_b)
+	{
+		a = new int();
+		b = new int();
+
+		a = other_a;
+		b = other_b;
+	}
+
+	void Show() override
+	{
+		cout << "a:\t" << *a << endl;
+		cout << "b:\t" << *b << endl;
+	}
+	double CalcArea() override
+	{
+		return (*a) * (*b);
+	}
+	Figure* Copy() override
+	{
+		Figure* rec = new Rectangle(a, b);
+		return rec;
+	}
+};
+
+
+class Square : public Figure
+{
+private:
+	int* a;
+	int* b;
+
+public:
+	Square()
+	{
+		a = new int();
+
+
+
+
+		cout << "Введите сторону a:\t"; cin >> *a;
+
+
+	}
+	Square(int* other_a)
+	{
+		a = new int();
+
+		a = other_a;
+	}
+
+	void Show() override
+	{
+		cout << "a:\t" << *a << endl;
+	}
+	double CalcArea() override
+	{
+		return ((*a) * (*a));
+	}
+	Figure* Copy() override
+	{
+		Figure* rho = new Square(a);
+		return rho;
+	}
+};
+
+class Cylinder : public Figure
+{
+private:
+	double* h;
+	Figure* F;
+
+public:
+	Cylinder()
+	{
+		cout << "Введите высоту цилиндра:\t"; cin >> *h;
+	}
+	Cylinder(Figure* F1, double* h)
+	{
+		this->h = new double;
+
+		F = F1->Copy();
+		this->h = h;
+	}
+
+	double CalcVolume()
+	{
+		return *h * F->CalcArea();
+	}
+
+	~Cylinder()
+	{
+		delete F;
+	}
+};
+
+
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	Figure* F = new Figure();
+	int key = 0; bool flag = true;
+
+	while (flag)
+	{
+		cout << "Square(1) || Circle(2) || Rectangle(3):\t"; cin >> key;
+		switch (key)
+		{
+		case 1:
+			F = new Square();
+			cout << "Площадь квадрата:\t";
+			flag = false;
+			break;
+		case 2:
+			F = new Circle();
+			cout << "Площадь круга:\t";
+			flag = false;
+			break;
+		case 3:
+			F = new Rectangle();
+			cout << "Площадь прямоугольника:\t";
+			flag = false;
+			break;
+		default:
+			cout << "Нет таких фигур." << endl;
+			break;
+		}
+	}
+
+	cout << F->CalcArea() << endl;
+	F->Show();
+
+	double h = 5;
+	Cylinder* C = new Cylinder(F, &h);
+	cout << "Объём цилиндра с высотой " << h << ":\t" << C->CalcVolume() << endl;
+
+
+	/*int a = 2; int b = 5;
+	Figure* F = new Square(&a, &b);
+	F->Show();*/
+
+	delete F;
+	delete C;
+	cout << endl;
+	return 0;
+}

@@ -1,0 +1,219 @@
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+using namespace std;
+
+class Table
+{
+public:
+    Table()
+    {
+        m_size = new int;
+        m_color = new char[10];
+    }
+    Table(int t_size, char* t_color)
+    {
+        if (t_size > 0)
+        {
+            m_size = new int;
+            *m_size = t_size;
+        }
+        else
+        {
+            cerr << "У стола размер больше нуля, введено: " << t_size << ". Выход.\n";
+            exit(1);
+        }
+        char* color = new char;
+        m_color = new char[20];
+        strcpy_s(m_color, strlen(t_color) + 1, t_color);
+    }
+    Table(int t_size)
+    {
+        if (t_size > 0)
+        {
+            m_size = new int;
+            *m_size = t_size;
+        }
+        else
+        {
+            cerr << "У стола размер больше нуля, введено: " << t_size << ". Выход.\n";
+            exit(1);
+        }
+        m_color = new char[10];
+    }
+    virtual ~Table()
+    {
+        delete m_size;
+        delete[] m_color;
+    }
+    virtual void show()
+    {
+        cout
+            << "Обычный стол:" << "\n\tразмер: " << *m_size << "\n\tцвет: " << m_color << "\n";
+    }
+    virtual int calc_volume()
+    {
+        return pow(*m_size, 3);
+    }
+private:
+    int* m_size;
+    char* m_color;
+}; // class Table
+
+class CompTable : public Table
+{
+public:
+    CompTable()
+        : Table()
+    {
+        m_h = new int;
+        m_material = new char[20];
+    }
+    CompTable(int t_size, char* t_color, int t_h, char* t_material)
+        : Table(t_size, t_color)
+    {
+        if (t_h > 0)
+        {
+            m_h = new int;
+            *m_h = t_h;
+        }
+        else
+        {
+            cerr << "У комп. стола высота больше нуля, введена: " << t_h << ". Выход.\n";
+            exit(1);
+        }
+        m_material = new char[20];
+        strcpy_s(m_material, strlen(t_material) + 1, t_material);
+    }
+    ~CompTable()
+    {
+        delete m_h;
+        delete[] m_material;
+    }
+    virtual int calc_volume() override
+    {
+        return Table::calc_volume() + pow(*m_h, 3);
+    }
+    int calc_volume_ct()
+    {
+        return Table::calc_volume() + pow(*m_h, 3);
+    }
+    virtual void show() override
+    {
+        cout << "Компьютерный стол:" << "\n\tвысота: " << *m_h << "\n\tматериал: " << m_material << "\n";
+    }
+private:
+    int* m_h;
+    char* m_material;
+}; // class CompTable : public Table
+
+class RoundTable : public Table
+{
+public:
+    RoundTable()
+        : Table()
+    {
+        m_radius = 1.0;
+    }
+    RoundTable(int t_size, char* t_color, double t_radius)
+        : Table(t_size, t_color)
+    {
+        if (t_radius > 0.0)
+        {
+            m_radius = t_radius;
+        }
+        else
+        {
+            cerr << "Радиус круглого стола должен быть больше нуля, введено: " << t_radius << "\n";
+            exit(1);
+        }
+    }
+    ~RoundTable()
+    {}
+    int calc_volume_rt()
+    {
+        return calc_volume() + 3.14 * pow(m_radius, 2);
+    }
+    virtual int calc_volume() override
+    {
+        return Table::calc_volume() + 3.14 * pow(m_radius, 2);
+    }
+    virtual void show() override
+    {
+        cout << "Круглый стол:" << "\n\tрадиус: " << m_radius << "\n";
+    }
+private:
+    double m_radius;
+}; // class RoundTable : public Table
+
+const double get_table_cost(Table* table)
+{
+    return table->calc_volume() * 15;
+    // 15 - стоимость единицы объёма
+}
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    cout << "ЧАСТЬ 1\n\n";
+
+    char brown[] = "коричневый";
+    Table* table = new Table(10, brown);
+    table->show();
+    table->calc_volume();
+    delete table;
+    table = nullptr;
+    cout << "\n";
+
+    char white[] = "белый";
+    char dsp[] = "ДСП";
+    CompTable* ctable = new CompTable(10, white, 2, dsp);
+    ctable->show();
+    ctable->calc_volume_ct();
+    delete ctable;
+    ctable = nullptr;
+    cout << "\n";
+
+    char black[] = "чёрный";
+    RoundTable* rtable = new RoundTable(12, black, 10);
+    rtable->show();
+    rtable->calc_volume_rt();
+    delete rtable;
+    rtable = nullptr;
+
+    cout << "\nЧАСТЬ 2\n\n";
+    Table* random_table;
+    cout << "Выберите стол:"
+        << "\n1. Обычный стол"
+        << "\n2. Компьютерный стол"
+        << "\n3. Круглый стол"
+        << "\nВыбор: ";
+    int choice = 0;
+    cin >> choice;
+    char wood[] = "дерево";
+    if (choice == 1)
+    {
+        std::cout << '\n';
+        random_table = new Table(10, brown);
+    }
+    else if (choice == 2) 
+    {
+        std::cout << '\n';
+        random_table = new CompTable(10, white, 10, wood);
+    }
+    else if (choice == 3)
+    {
+        std::cout << '\n';
+        random_table = new RoundTable(10, black, 15.5);
+    }
+    else
+    {
+        return 0;
+    }
+    random_table->show();
+    cout << "\nЦена стола: " << get_table_cost(random_table) << "\n";
+    delete random_table;
+    random_table = nullptr;
+    return 0;
+}

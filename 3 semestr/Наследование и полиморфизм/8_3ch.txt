@@ -1,0 +1,188 @@
+#include <iostream>
+
+using namespace std;
+
+#define PI 3.14
+
+
+
+
+class Figure	// Интерфейс
+{
+private:
+
+public:
+	Figure()
+	{
+
+	}
+
+	virtual void Show()
+	{
+
+	}
+	virtual double CalcArea()
+	{
+		return 0;
+	}
+};
+
+class Circle : public Figure
+{
+private:
+	int* r;	// Радиус
+
+public:
+	Circle()
+	{
+		r = new int();
+		do
+		{
+			cout << "Введите радиус r:\t";
+			cin >> *r;
+		} while (*r < 0);
+	}
+	Circle(int* r)
+	{
+		this->r = new int();
+
+		this->r = r;
+	}
+
+	void Show() override
+	{
+		cout << "r:\t" << *r << endl;
+	}
+	double CalcArea() override
+	{
+		return PI * (*r) * (*r);
+	}
+};
+
+class Rectangle : public Figure
+{
+private:
+	int* a;
+	int* b;
+public:
+	Rectangle()
+	{
+		a = new int();
+		b = new int();
+
+		do
+		{
+			cout << "Введите сторону a:\t"; cin >> *a;
+			cout << "Введите сторону b:\t"; cin >> *b;
+		} while (*a < 0 || *b < 0);
+	}
+	Rectangle(int* a, int* b)
+	{
+		this->a = new int();
+		this->b = new int();
+
+		this->a = a;
+		this->b = b;
+	}
+
+	void Show() override
+	{
+		cout << "a:\t" << *a << endl;
+		cout << "b:\t" << *b << endl;
+	}
+	double CalcArea() override
+	{
+		return (*a) * (*b);
+	}
+
+};
+
+
+class Square : public Figure
+{
+private:
+	int* a;
+
+public:
+	Square()
+	{
+		a = new int();
+
+		cout << "Введите сторону a:\t"; cin >> *a;
+
+	}
+	Square(int* a)
+	{
+		this->a = new int();
+
+
+		this->a = a;
+	}
+
+	void Show() override
+	{
+		cout << "a:\t" << *a << endl;
+
+	}
+	double CalcArea() override
+	{
+		return ((*a) * (*a));
+	}
+
+};
+
+
+double V(double p, int h)
+{
+	return p * h;
+}
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	Figure* F;
+
+	int key = 0;
+
+	while (true)
+	{
+		cout << "Square(1) || Circle(2) || Rectangle(3):\t"; cin >> key;
+		if (key == 1 || key == 2 || key == 3)
+		{
+			switch (key)
+			{
+			case 1:
+				F = new Square();
+				cout << "Площадь квадрата:\t";
+				goto L1;
+				// break;
+			case 2:
+				F = new Circle();
+				cout << "Площадь круга:\t";
+				goto L1;
+				// break;
+			case 3:
+				F = new Rectangle();
+				cout << "Площадь прямоугольника:\t";
+				goto L1;
+				// break;
+			}
+			// break;
+		}
+	}
+L1:
+
+	cout << F->CalcArea() << endl;
+	F->Show();
+
+	int h = 0;
+	do
+	{
+		cout << "Высота цилиндра:\t"; cin >> h;
+	} while (h < 0);
+
+	cout << "Объём цилиндра:\t" << V(F->CalcArea(), h) << endl;
+
+	cout << endl;
+	return 0;
+}
