@@ -1,0 +1,123 @@
+import javafx.application.Application;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Separator;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Pane; // Панель компоновки
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.Scene;
+import javafx.scene.shape.*;
+
+import javafx.geometry.*;	// Для возможности использовать
+
+import javafx.stage.Stage;
+import javafx.stage.Stage;
+
+import java.lang.Math;
+import java.util.Random;
+
+
+
+public class Main extends Application {
+    int x = 0;
+    double oldX, oldY;
+    boolean flag = true;
+
+
+
+    public static void main(String[] args) {
+        Application.launch(args);
+
+
+    }
+
+    @Override
+    public void start(Stage stage) {
+        stage.setTitle("Figure"); // установка заголовка
+        stage.setWidth(500);            // установка ширины
+        stage.setHeight(500);           // установка длины
+
+        // Размеры фигур от 50 до 150
+        Rectangle rec = new Rectangle(50 + (int) (Math.random() * 150), 50 + (int) (Math.random() * 150));
+        Circle cir = new Circle(25 + (int) (Math.random() * 50));
+        rec.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+        cir.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+        rec.setVisible(false);
+        cir.setVisible(false);
+
+        // StackPane - панель, в которой объекты накладываются друг на друга по оси Z
+        StackPane root = new StackPane(rec, cir);
+
+        Button recBtn = new Button("Rectangle");
+        Button cirBtn = new Button("Circle");
+        Button recBtnHide = new Button ("Hide the Rectangle");
+        Button cirBtnHide = new Button ("Hide the Circle");
+        recBtn.setPrefSize(150, 50);
+        cirBtn.setPrefSize(150, 50);
+        recBtnHide.setPrefSize(150, 50);
+        cirBtnHide.setPrefSize(150, 50);
+
+        // Действия для кнопок
+        recBtn.setOnAction(event -> {
+            rec.setVisible(true);
+
+        });
+        cirBtn.setOnAction(event -> {
+            cir.setVisible(true);
+        });
+        recBtnHide.setOnAction(event -> {
+            rec.setVisible(false);
+        });
+        cirBtnHide.setOnAction(event -> {
+            cir.setVisible(false);
+        });
+
+        FlowPane root2 = new FlowPane(Orientation.VERTICAL, root, recBtn, cirBtn, recBtnHide, cirBtnHide);
+        root2.setAlignment(Pos.CENTER);
+
+        // Действия для передвижения фигуры курсором
+        rec.setOnMousePressed(e -> {
+            oldX = rec.getTranslateX()-e.getSceneX();
+            oldY = rec.getTranslateY()-e.getSceneY();
+        });
+        rec.setOnMouseDragged(e -> {
+            rec.setTranslateX(oldX+e.getSceneX());
+            rec.setTranslateY(oldY+e.getSceneY());
+        });
+        cir.setOnMousePressed(e -> {
+            oldX = cir.getTranslateX()-e.getSceneX();
+            oldY = cir.getTranslateY()-e.getSceneY();
+        });
+        cir.setOnMouseDragged(e -> {
+            cir.setTranslateX(oldX+e.getSceneX());
+            cir.setTranslateY(oldY+e.getSceneY());
+        });
+
+
+        // Тут меняем цвет при клике на фигуру
+        rec.setOnMouseClicked(e -> {
+            rec.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+        });
+        cir.setOnMouseClicked(e -> {
+            cir.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+        });
+
+
+
+        // Устанавливаем на сцену нашу панель
+        Scene scene = new Scene(root2);
+
+        // Устанавливаем сцену
+        stage.setScene(scene);
+        // Отображаем это всё на экране
+        stage.show();
+    }
+}
+
