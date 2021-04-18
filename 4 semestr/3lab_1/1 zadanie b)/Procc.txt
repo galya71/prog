@@ -1,0 +1,10 @@
+package sample;
+
+public class Procc implements Runnable{
+    @Override
+    public void run() {
+        while (true){
+            System.out.println("loop");
+        }
+    }
+}
